@@ -1,0 +1,107 @@
+<?php
+
+use Kirby\Cms\App as Kirby;
+use JanHerman\ColorExtractor\ColorExtractor;
+
+@include_once __DIR__ . '/vendor/autoload.php';
+
+Kirby::plugin('jan-herman/colorextractor', [
+	'options' => [
+		'average'       => false,
+		'fallbackColor' => '#ffffff',
+        'mode'          => 'dominant',
+        'jobs' => [
+            'extractColors' => function () {
+                $files      = ColorExtractor::getFilesIndex();
+                $files      = $files->filter(function($file) { return $file->color()->isEmpty(); });
+                $filesCount = $files->count();
+
+                foreach($files as $file) {
+                    $file->extractColor();
+                }
+
+                return [
+                    'status' => 200,
+                    'label' => tc('colorextractor.processed', $filesCount)
+                ];
+            },
+            'forceExtractColors' => function () {
+                $files      = ColorExtractor::getFilesIndex();
+                $filesCount = $files->count();
+
+                foreach($files as $file) {
+                    $file->extractColor();
+                }
+
+                return [
+                    'status' => 200,
+                    'label' => tc('colorextractor.processed', $filesCount)
+                ];
+            },
+        ]
+	],
+    'hooks'  => [
+        'file.create:after'  => function ($file) {
+            $file->extractColor();
+        },
+        'file.replace:after' => function ($newFile, $oldFile) {
+            $newFile->extractColor();
+        }
+    ],
+    'fileMethods' => [
+        'extractColor' => function() : Kirby\Cms\Field {
+            if($this->type() === 'image') {
+                $mode          = option('jan-herman.colorextractor.mode');
+                // compatibility with previous versions
+                $mode          = option('jan-herman.colorextractor.average') == true ? 'average' : $mode;
+                $fallbackColor = option('jan-herman.colorextractor.fallBackColor');
+
+                ColorExtractor::extractColor($this, $mode, $fallbackColor);
+            }
+            return $this->color();
+        }
+    ],
+    'fieldMethods' => [
+        'dominantColor' => function($field, $mode = 'dominant') {
+            $colors = $field->split(',');
+            $count  = count($colors);
+
+            if($count == 0) $field->value = null;
+            else $field->value = $colors[0];
+
+            return $field;
+        },
+        'averageColor' => function($field, $mode = 'dominant') {
+            $colors = $field->split(',');
+            $count  = count($colors);
+
+            if($count == 0) $field->value = null;
+            else $field->value = $count == 1 ? $colors[0] : $colors[1];
+
+            return $field;
+        }
+    ],
+    'translations' => array(
+        'en' => [
+            'colorextractor.processed'  => [
+                'There are no images with missing colors.',
+                '1 image processed!',
+                '{{ count }} images processed!'
+            ]
+        ],
+        'de' => [
+            'colorextractor.processed'  => [
+                'Keine fehlenden Farben.',
+                'Bild verarbeitet!',
+                '{{ count }} Bilder verarbeitet!'
+            ]
+        ],
+        'fr' => [
+            'colorextractor.processed'  => [
+                'Aucune couleur manquante.',
+                '1 couleur extraite !',
+                '{{ count }} couleurs extraites !'
+            ]
+        ]
+    )
+]);
