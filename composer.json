@@ -1,7 +1,7 @@
 {
     "name": "jan-herman/kirby-colorextractor",
     "description": "Extract dominant / average color from any image.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "type": "kirby-plugin",
     "license": "MIT",
     "authors": [
