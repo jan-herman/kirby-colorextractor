@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.3] - 2024-02-14
+### Fixed
+- Wrong return type for extractColor file method
+
+
 ## [1.0.2] - 2023-12-06
 ### Fixed
 - Wrong return type for extractColor file method
