@@ -1,7 +1,7 @@
 {
     "name": "jan-herman/kirby-colorextractor",
     "description": "Extract dominant / average color from any image.",
-    "version": "1.0.3",
+    "version": "2.0.0",
     "type": "kirby-plugin",
     "license": "MIT",
     "homepage": "https://github.com/jan-herman/kirby-colorextractor",
@@ -17,6 +17,7 @@
         }
     ],
     "require": {
+        "getkirby/cms": "^4.0",
         "getkirby/composer-installer": "^1.2",
         "ksubileau/color-thief-php": "^2.0"
     },

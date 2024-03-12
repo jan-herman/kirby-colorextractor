@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.0.0] - 2024-03-12
+### Added
+- Kirby 4 compatibility
+
+
 ## [1.0.3] - 2024-02-14
 ### Fixed
 - Wrong return type for extractColor file method

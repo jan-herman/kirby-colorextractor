@@ -49,7 +49,7 @@ Kirby::plugin('jan-herman/colorextractor', [
         }
     ],
     'fileMethods' => [
-        'extractColor' => function() : \Kirby\Cms\Field {
+        'extractColor' => function() : \Kirby\Content\Field {
             if($this->type() === 'image') {
                 $mode          = option('jan-herman.colorextractor.mode');
                 // compatibility with previous versions
